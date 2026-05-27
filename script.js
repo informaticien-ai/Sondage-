@@ -1,3 +1,55 @@
+// ==================== AUDIO CONTEXT SETUP ====================
+
+/**
+ * Contexte audio global pour les sons
+ */
+let audioContext = null;
+let audioContextResumed = false;
+
+/**
+ * Initialise le contexte audio à la première interaction
+ */
+function initAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioContext.state === 'suspended') {
+    audioContext.resume();
+    audioContextResumed = true;
+  }
+}
+
+/**
+ * Joue un son "tic" simple avec l'API Web Audio
+ */
+function playClickSound() {
+  // Initialiser le contexte audio si nécessaire
+  if (!audioContext) {
+    initAudioContext();
+  }
+  
+  // Créer un oscillateur pour générer le son
+  const now = audioContext.currentTime;
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  // Configurer le son
+  oscillator.frequency.value = 800; // Fréquence en Hz (son aigu)
+  oscillator.type = 'sine';
+  
+  // Configurer le volume (fade out)
+  gainNode.gain.setValueAtTime(0.3, now);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+  
+  // Connecter les nœuds
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  // Jouer le son pendant 0.1 secondes
+  oscillator.start(now);
+  oscillator.stop(now + 0.1);
+}
+
 // ==================== TOGGLE FUNCTIONS ====================
 
 /**
@@ -42,6 +94,19 @@ document.addEventListener('DOMContentLoaded', function() {
   if (surveyForm) {
     surveyForm.addEventListener('submit', handleFormSubmit);
   }
+  
+  // Ajouter des écouteurs de clic sur tous les boutons radio
+  const radioButtons = document.querySelectorAll('input[type="radio"]');
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', function() {
+      // Initialiser le contexte audio au premier clic
+      if (!audioContextResumed) {
+        initAudioContext();
+      }
+      // Jouer le son
+      playClickSound();
+    });
+  });
 });
 
 /**
