@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sondage Farine Fufu</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🌾 Sondage Farine Fufu</h1>
+    <p class="intro">Bonjour, ce questionnaire vise à mieux comprendre les besoins des habitants concernant l'achat de farine pour fufu.</p>
+  </div>
+
+  <form id="surveyForm" class="survey-form">
+    
+    <div class="question">
+      <label class="question-label">1. Êtes-vous une famille nombreuse ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="famille" value="oui" onchange="toggleFamille(true)"> Oui</label>
+        <label class="radio-label"><input type="radio" name="famille" value="non" onchange="toggleFamille(false)"> Non</label>
+      </div>
+    </div>
+
+    <div class="question hidden" id="qMembres">
+      <label class="question-label">Si oui, combien de membres compte votre famille ?</label>
+      <input type="number" name="membres" min="1" placeholder="Nombre de personnes" class="input-field">
+    </div>
+
+    <div class="question">
+      <label class="question-label">2. Combien de fois achetez-vous de la farine au cours d'un mois ?</label>
+      <input type="number" name="frequence" min="0" placeholder="Ex: 4" class="input-field">
+    </div>
+
+    <div class="question">
+      <label class="question-label">3. Trouvez-vous difficile de transporter le sac de farine ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="transport" value="oui"> Oui</label>
+        <label class="radio-label"><input type="radio" name="transport" value="non"> Non</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">4. Pensez-vous qu'un service de livraison serait utile ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="livraison_utile" value="Très utile"> Très utile</label>
+        <label class="radio-label"><input type="radio" name="livraison_utile" value="Utile"> Utile</label>
+        <label class="radio-label"><input type="radio" name="livraison_utile" value="Peu utile"> Peu utile</label>
+        <label class="radio-label"><input type="radio" name="livraison_utile" value="Inutile"> Inutile</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">5. Faites-vous confiance à une livraison à domicile ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="confiance" value="oui"> Oui</label>
+        <label class="radio-label"><input type="radio" name="confiance" value="non"> Non</label>
+        <label class="radio-label"><input type="radio" name="confiance" value="peut-etre"> Peut-être</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">6. Quel type de farine préférez-vous ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="type_farine" value="Maïs blanc"> Maïs blanc</label>
+        <label class="radio-label"><input type="radio" name="type_farine" value="Maïs jaune"> Maïs jaune</label>
+        <label class="radio-label"><input type="radio" name="type_farine" value="Mélange ½ deux"> Mélange ½ deux</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">7. Si vous consommez la farine blanche, quelle marque consommez-vous ?</label>
+      <input type="text" name="marque" placeholder="Nom de la marque" class="input-field">
+    </div>
+
+    <div class="question">
+      <label class="question-label">8. Quel montant acceptez-vous pour la livraison ?</label>
+      <input type="number" name="prix_livraison" min="0" placeholder="En FC" class="input-field">
+    </div>
+
+    <div class="question">
+      <label class="question-label">9. Où achetez-vous généralement votre farine ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="lieu_achat" value="Marché"> Marché</label>
+        <label class="radio-label"><input type="radio" name="lieu_achat" value="Boutique"> Boutique</label>
+        <label class="radio-label"><input type="radio" name="lieu_achat" value="Moulin"> Moulin</label>
+        <label class="radio-label"><input type="radio" name="lieu_achat" value="Livraison à domicile"> Livraison à domicile</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">10. Qu'est ce qui est le plus important pour vous ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="important" value="Prix"> Prix</label>
+        <label class="radio-label"><input type="radio" name="important" value="Qualité"> La Qualité</label>
+        <label class="radio-label"><input type="radio" name="important" value="Propreté"> La Propreté de l'emballage</label>
+        <label class="radio-label"><input type="radio" name="important" value="Goût"> Le goût</label>
+        <label class="radio-label"><input type="radio" name="important" value="Proximité"> La Proximité</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label class="question-label">11. Avez-vous des difficultés à trouver une bonne farine de maïs ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="difficulte" value="oui" onchange="toggleDifficulte(true)"> Oui</label>
+        <label class="radio-label"><input type="radio" name="difficulte" value="non" onchange="toggleDifficulte(false)"> Non</label>
+      </div>
+    </div>
+
+    <div class="question hidden" id="qDifficulte">
+      <label class="question-label">Si oui, lesquelles ?</label>
+      <input type="text" name="difficulte_detail" placeholder="Expliquez brièvement" class="input-field">
+    </div>
+
+    <div class="question">
+      <label class="question-label">12. Accepteriez-vous de tester une nouvelle marque locale ?</label>
+      <div class="options">
+        <label class="radio-label"><input type="radio" name="tester" value="oui"> Oui</label>
+        <label class="radio-label"><input type="radio" name="tester" value="non"> Non</label>
+        <label class="radio-label"><input type="radio" name="tester" value="peut-etre"> Peut-être</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">📲 Envoyer sur WhatsApp</button>
+  </form>
+
+  <div class="success" id="successMsg">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h2>Merci !</h2>
+      <p>Ouverture de WhatsApp... Envoie le message pour valider.</p>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
