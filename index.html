@@ -4,7 +4,547 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sondage Farine Fufu</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ==================== GLOBAL STYLES ==================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* ==================== CONTAINER - GLASSMORPHISM ==================== */
+    .container {
+      max-width: 750px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                  inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 50px 40px;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 3px solid;
+      border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+      padding-bottom: 25px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 30px rgba(102, 126, 234, 0.1);
+    }
+
+    .header .intro {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* ==================== FORM STYLES ==================== */
+    .survey-form {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .question {
+      animation: fadeIn 0.5s ease-out;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .question:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.9) 100%);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .question.hidden {
+      display: none;
+    }
+
+    .question-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ==================== OPTIONS (RADIO/CHECKBOX) ==================== */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(240, 244, 255, 0.5) 100%);
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    }
+
+    .radio-label:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 244, 255, 0.7) 100%);
+      color: #667eea;
+      border-color: rgba(102, 126, 234, 0.4);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      transform: translateX(4px);
+    }
+
+    .radio-label input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 244, 255, 0.8) 100%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.5);
+      position: relative;
+    }
+
+    .radio-label input[type="radio"]:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    .radio-label input[type="radio"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.25),
+                  0 4px 12px rgba(102, 126, 234, 0.3),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .radio-label input[type="radio"]:checked {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.25),
+                  0 8px 20px rgba(102, 126, 234, 0.4),
+                  inset 0 0 0 3px rgba(255, 255, 255, 0.3);
+      animation: pulseGlow 0.6s ease-out;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.4),
+                    0 8px 20px rgba(102, 126, 234, 0.4),
+                    inset 0 0 0 3px rgba(255, 255, 255, 0.3);
+      }
+      100% {
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.25),
+                    0 8px 20px rgba(102, 126, 234, 0.4),
+                    inset 0 0 0 3px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    /* ==================== INPUT FIELDS ==================== */
+    .input-field {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      color: #333;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 244, 255, 0.8) 100%);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1),
+                  inset 0 1px 3px rgba(255, 255, 255, 0.6),
+                  inset 0 -2px 4px rgba(102, 126, 234, 0.05);
+    }
+
+    .input-field::placeholder {
+      color: #aaa;
+    }
+
+    .input-field:hover:not(:focus) {
+      border-color: rgba(102, 126, 234, 0.5);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.15),
+                  inset 0 1px 3px rgba(255, 255, 255, 0.6),
+                  inset 0 -2px 4px rgba(102, 126, 234, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 244, 255, 0.95) 100%);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2),
+                  0 8px 24px rgba(102, 126, 234, 0.3),
+                  inset 0 1px 3px rgba(255, 255, 255, 0.6),
+                  inset 0 -2px 4px rgba(102, 126, 234, 0.1);
+      animation: focusGlow 0.4s ease-out;
+    }
+
+    @keyframes focusGlow {
+      0% {
+        box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1),
+                    0 8px 24px rgba(102, 126, 234, 0.2),
+                    inset 0 1px 3px rgba(255, 255, 255, 0.6),
+                    inset 0 -2px 4px rgba(102, 126, 234, 0.1);
+      }
+      100% {
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2),
+                    0 8px 24px rgba(102, 126, 234, 0.3),
+                    inset 0 1px 3px rgba(255, 255, 255, 0.6),
+                    inset 0 -2px 4px rgba(102, 126, 234, 0.1);
+      }
+    }
+
+    /* ==================== BUTTON ==================== */
+    .btn-submit {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 20px;
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4),
+                  0 4px 8px rgba(0, 0, 0, 0.1),
+                  inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5),
+                  0 6px 12px rgba(0, 0, 0, 0.15),
+                  inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-submit:hover::before {
+      left: 100%;
+    }
+
+    .btn-submit:active {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4),
+                  0 2px 4px rgba(0, 0, 0, 0.1),
+                  inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ==================== SUCCESS MESSAGE ==================== */
+    .success {
+      display: none;
+      animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-content {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      50% {
+        transform: translateY(10px);
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .success-content h2 {
+      color: #25D366;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .success-content p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ==================== RESPONSIVE DESIGN ==================== */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      .header h1 {
+        font-size: 26px;
+      }
+
+      .header .intro {
+        font-size: 14px;
+      }
+
+      .question-label {
+        font-size: 14px;
+      }
+
+      .radio-label {
+        font-size: 13px;
+        padding: 10px 14px;
+      }
+
+      .input-field {
+        padding: 12px 16px;
+        font-size: 13px;
+      }
+
+      .btn-submit {
+        padding: 14px 24px;
+        font-size: 14px;
+      }
+
+      body {
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+      }
+
+      .survey-form {
+        gap: 20px;
+      }
+
+      .question {
+        padding: 18px;
+      }
+
+      .question-label {
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .radio-label {
+        font-size: 12px;
+        padding: 10px 12px;
+        gap: 10px;
+      }
+
+      .radio-label input[type="radio"] {
+        width: 20px;
+        height: 20px;
+      }
+
+      .input-field {
+        padding: 11px 14px;
+        font-size: 13px;
+      }
+
+      .btn-submit {
+        padding: 12px 20px;
+        font-size: 13px;
+      }
+
+      .success-icon {
+        font-size: 50px;
+      }
+
+      .success-content h2 {
+        font-size: 24px;
+      }
+
+      .success-content p {
+        font-size: 14px;
+      }
+    }
+
+    /* ==================== ACCESSIBILITY ==================== */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ==================== DARK MODE SUPPORT ==================== */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #1a1a2e 100%);
+      }
+
+      .container {
+        background: rgba(30, 30, 46, 0.95);
+        color: #e0e0e0;
+      }
+
+      .header h1 {
+        color: #667eea;
+      }
+
+      .header .intro {
+        color: #aaa;
+      }
+
+      .question-label {
+        color: #667eea;
+      }
+
+      .question {
+        background: linear-gradient(135deg, rgba(40, 40, 60, 0.9) 0%, rgba(30, 30, 50, 0.8) 100%);
+        border-color: rgba(102, 126, 234, 0.3);
+      }
+
+      .radio-label {
+        color: #ccc;
+        background: linear-gradient(135deg, rgba(50, 50, 70, 0.7) 0%, rgba(40, 40, 60, 0.5) 100%);
+        border-color: rgba(102, 126, 234, 0.3);
+      }
+
+      .radio-label:hover {
+        background: linear-gradient(135deg, rgba(60, 60, 80, 0.8) 0%, rgba(50, 50, 70, 0.6) 100%);
+      }
+
+      .radio-label input[type="radio"] {
+        background: linear-gradient(135deg, rgba(50, 50, 70, 0.9) 0%, rgba(40, 40, 60, 0.8) 100%);
+        border-color: #555;
+      }
+
+      .input-field {
+        background: linear-gradient(135deg, rgba(50, 50, 70, 0.95) 0%, rgba(40, 40, 60, 0.8) 100%);
+        border-color: rgba(102, 126, 234, 0.3);
+        color: #e0e0e0;
+      }
+
+      .input-field:focus {
+        background: linear-gradient(135deg, rgba(60, 60, 80, 0.98) 0%, rgba(50, 50, 70, 0.95) 100%);
+      }
+
+      .success-content p {
+        color: #aaa;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -135,7 +675,332 @@
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+  // ==================== TOGGLE FUNCTIONS ====================
+
+  /**
+   * Affiche ou masque la question sur le nombre de membres
+   * @param {boolean} show - true pour afficher, false pour masquer
+   */
+  function toggleFamille(show) {
+    const element = document.getElementById('qMembres');
+    if (show) {
+      element.classList.remove('hidden');
+      element.querySelector('input').focus();
+    } else {
+      element.classList.add('hidden');
+      element.querySelector('input').value = '';
+    }
+  }
+
+  /**
+   * Affiche ou masque la question sur les difficultés
+   * @param {boolean} show - true pour afficher, false pour masquer
+   */
+  function toggleDifficulte(show) {
+    const element = document.getElementById('qDifficulte');
+    if (show) {
+      element.classList.remove('hidden');
+      element.querySelector('input').focus();
+    } else {
+      element.classList.add('hidden');
+      element.querySelector('input').value = '';
+    }
+  }
+
+  // ==================== FORM SUBMISSION ====================
+
+  /**
+   * Initialise les écouteurs d'événements du formulaire
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    const surveyForm = document.getElementById('surveyForm');
+    
+    // Vérification de l'existence du formulaire
+    if (surveyForm) {
+      surveyForm.addEventListener('submit', handleFormSubmit);
+    }
+  });
+
+  /**
+   * Gère la soumission du formulaire
+   * @param {Event} e - L'événement de soumission
+   */
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    // Récupération des données du formulaire
+    const formData = new FormData(document.getElementById('surveyForm'));
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validation basique
+    if (!validateForm(data)) {
+      showAlert('Veuillez remplir tous les champs obligatoires.', 'error');
+      return;
+    }
+    
+    // Création du message WhatsApp
+    const message = formatWhatsAppMessage(data);
+    
+    // Numéro WhatsApp avec code pays (Congo: +243)
+    const numero = '243970709671';
+    const whatsappUrl = `https://wa.me/${numero}?text=${message}`;
+    
+    // Ouverture de WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Affichage du message de succès
+    showSuccessMessage();
+  }
+
+  /**
+   * Valide les données du formulaire
+   * @param {Object} data - Les données du formulaire
+   * @returns {boolean} true si valide, false sinon
+   */
+  function validateForm(data) {
+    const requiredFields = [
+      'famille',
+      'frequence',
+      'transport',
+      'livraison_utile',
+      'confiance',
+      'type_farine',
+      'marque',
+      'prix_livraison',
+      'lieu_achat',
+      'important',
+      'difficulte',
+      'tester'
+    ];
+    
+    for (let field of requiredFields) {
+      if (!data[field] || data[field].trim() === '') {
+        return false;
+      }
+    }
+    
+    // Vérification spécifique pour les champs conditionnels
+    if (data.famille === 'oui' && (!data.membres || data.membres.trim() === '')) {
+      return false;
+    }
+    
+    if (data.difficulte === 'oui' && (!data.difficulte_detail || data.difficulte_detail.trim() === '')) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  /**
+   * Formate les données en message WhatsApp
+   * @param {Object} data - Les données du formulaire
+   * @returns {string} Le message encodé en URL
+   */
+  function formatWhatsAppMessage(data) {
+    const timestamp = new Date().toLocaleString('fr-FR');
+    
+    let message = `*🌾 SONDAGE FARINE FUFU*%0A`;
+    message += `*Date & Heure:* ${timestamp}%0A%0A`;
+    message += `━━━━━━━━━━━━━━━━━━━━━━━%0A%0A`;
+    
+    // Question 1
+    message += `*Q1. Famille nombreuse:* ${formatAnswer(data.famille)}%0A`;
+    if (data.famille === 'oui') {
+      message += `   ├─ *Nombre de membres:* ${data.membres || '0'}%0A`;
+    }
+    
+    // Question 2
+    message += `*Q2. Fréquence d'achat/mois:* ${data.frequence || '0'} fois%0A`;
+    
+    // Question 3
+    message += `*Q3. Transport difficile:* ${formatAnswer(data.transport)}%0A`;
+    
+    // Question 4
+    message += `*Q4. Service de livraison utile:* ${data.livraison_utile || 'Non répondu'}%0A`;
+    
+    // Question 5
+    message += `*Q5. Confiance livraison:* ${formatAnswer(data.confiance)}%0A`;
+    
+    // Question 6
+    message += `*Q6. Type de farine préféré:* ${data.type_farine || 'Non répondu'}%0A`;
+    
+    // Question 7
+    message += `*Q7. Marque farine blanche:* ${data.marque || 'Non répondu'}%0A`;
+    
+    // Question 8
+    message += `*Q8. Budget livraison:* ${data.prix_livraison || '0'} FC%0A`;
+    
+    // Question 9
+    message += `*Q9. Lieu d'achat habituel:* ${data.lieu_achat || 'Non répondu'}%0A`;
+    
+    // Question 10
+    message += `*Q10. Priorité:* ${data.important || 'Non répondu'}%0A`;
+    
+    // Question 11
+    message += `*Q11. Difficultés à trouver:* ${formatAnswer(data.difficulte)}%0A`;
+    if (data.difficulte === 'oui') {
+      message += `   ├─ *Détails:* ${data.difficulte_detail || 'Aucun détail'}%0A`;
+    }
+    
+    // Question 12
+    message += `*Q12. Tester nouvelle marque:* ${formatAnswer(data.tester)}%0A`;
+    
+    message += `%0A━━━━━━━━━━━━━━━━━━━━━━━%0A`;
+    message += `✅ *Sondage complété avec succès*`;
+    
+    return encodeURIComponent(message);
+  }
+
+  /**
+   * Formate les réponses (oui/non -> Oui/Non)
+   * @param {string} answer - La réponse brute
+   * @returns {string} La réponse formatée
+   */
+  function formatAnswer(answer) {
+    const answerMap = {
+      'oui': '✅ Oui',
+      'non': '❌ Non',
+      'peut-etre': '❓ Peut-être'
+    };
+    return answerMap[answer] || answer;
+  }
+
+  /**
+   * Affiche le message de succès
+   */
+  function showSuccessMessage() {
+    const form = document.getElementById('surveyForm');
+    const successMsg = document.getElementById('successMsg');
+    
+    if (form && successMsg) {
+      form.style.display = 'none';
+      successMsg.style.display = 'block';
+      
+      // Scroll vers le message de succès
+      setTimeout(() => {
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+      
+      // Réinitialisation après 5 secondes (optionnel)
+      setTimeout(() => {
+        resetForm();
+      }, 5000);
+    }
+  }
+
+  /**
+   * Réinitialise le formulaire
+   */
+  function resetForm() {
+    const form = document.getElementById('surveyForm');
+    const successMsg = document.getElementById('successMsg');
+    
+    if (form && successMsg) {
+      form.reset();
+      form.style.display = 'flex';
+      successMsg.style.display = 'none';
+      
+      // Réinitialisation des champs conditionnels
+      document.getElementById('qMembres').classList.add('hidden');
+      document.getElementById('qDifficulte').classList.add('hidden');
+      
+      // Scroll vers le haut du formulaire
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  /**
+   * Affiche une alerte personnalisée
+   * @param {string} message - Le message à afficher
+   * @param {string} type - Le type d'alerte ('success', 'error', 'warning')
+   */
+  function showAlert(message, type = 'info') {
+    // Créer un élément d'alerte
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === 'error' ? '#ff4757' : type === 'success' ? '#25D366' : '#ffa502'};
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1000;
+      animation: slideInRight 0.4s ease-out;
+      backdrop-filter: blur(4px);
+    `;
+    
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    // Ajouter l'animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Supprimer l'alerte après 4 secondes
+    setTimeout(() => {
+      alertDiv.style.animation = 'slideInRight 0.4s ease-out reverse';
+      setTimeout(() => alertDiv.remove(), 400);
+    }, 4000);
+  }
+
+  // ==================== ENHANCEMENTS ====================
+
+  /**
+   * Ajoute les raccourcis clavier
+   */
+  document.addEventListener('keydown', function(event) {
+    // Ctrl + Entrée pour soumettre le formulaire
+    if (event.ctrlKey && event.key === 'Enter') {
+      const form = document.getElementById('surveyForm');
+      if (form && form.style.display !== 'none') {
+        form.dispatchEvent(new Event('submit'));
+      }
+    }
+  });
+
+  /**
+   * Prévient les envois multiples accidentels
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('surveyForm');
+    const button = form?.querySelector('.btn-submit');
+    
+    if (button) {
+      let isSubmitting = false;
+      
+      form.addEventListener('submit', function() {
+        if (isSubmitting) return;
+        isSubmitting = true;
+        button.disabled = true;
+        button.textContent = '⏳ Envoi en cours...';
+        
+        // Réactiver le bouton après 3 secondes
+        setTimeout(() => {
+          isSubmitting = false;
+          button.disabled = false;
+          button.textContent = '📲 Envoyer sur WhatsApp';
+        }, 3000);
+      });
+    }
+  });
+</script>
 
 </body>
 </html>
