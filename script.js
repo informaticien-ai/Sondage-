@@ -122,55 +122,56 @@ function validateForm(data) {
 function formatWhatsAppMessage(data) {
   const timestamp = new Date().toLocaleString('fr-FR');
   
-  let message = `*🌾 SONDAGE FARINE FUFU*%0A`;
-  message += `*Date & Heure:* ${timestamp}%0A%0A`;
-  message += `━━━━━━━━━━━━━━━━━━━━━━━%0A%0A`;
+  let message = `*🌾 SONDAGE FARINE FUFU*\n`;
+  message += `*Date & Heure:* ${timestamp}\n\n`;
+  message += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
   
   // Question 1
-  message += `*Q1. Famille nombreuse:* ${formatAnswer(data.famille)}%0A`;
+  message += `*Q1. Famille nombreuse:* ${formatAnswer(data.famille)}\n`;
   if (data.famille === 'oui') {
-    message += `   ├─ *Nombre de membres:* ${data.membres || '0'}%0A`;
+    message += `   ├─ *Nombre de membres:* ${data.membres || '0'}\n`;
   }
   
   // Question 2
-  message += `*Q2. Fréquence d'achat/mois:* ${data.frequence || '0'} fois%0A`;
+  message += `*Q2. Fréquence d'achat/mois:* ${data.frequence || '0'} fois\n`;
   
   // Question 3
-  message += `*Q3. Transport difficile:* ${formatAnswer(data.transport)}%0A`;
+  message += `*Q3. Transport difficile:* ${formatAnswer(data.transport)}\n`;
   
   // Question 4
-  message += `*Q4. Service de livraison utile:* ${data.livraison_utile || 'Non répondu'}%0A`;
+  message += `*Q4. Service de livraison utile:* ${data.livraison_utile || 'Non répondu'}\n`;
   
   // Question 5
-  message += `*Q5. Confiance livraison:* ${formatAnswer(data.confiance)}%0A`;
+  message += `*Q5. Confiance livraison:* ${formatAnswer(data.confiance)}\n`;
   
   // Question 6
-  message += `*Q6. Type de farine préféré:* ${data.type_farine || 'Non répondu'}%0A`;
+  message += `*Q6. Type de farine préféré:* ${data.type_farine || 'Non répondu'}\n`;
   
   // Question 7
-  message += `*Q7. Marque farine blanche:* ${data.marque || 'Non répondu'}%0A`;
+  message += `*Q7. Marque farine blanche:* ${data.marque || 'Non répondu'}\n`;
   
   // Question 8
-  message += `*Q8. Budget livraison:* ${data.prix_livraison || '0'} FC%0A`;
+  message += `*Q8. Budget livraison:* ${data.prix_livraison || '0'} FC\n`;
   
   // Question 9
-  message += `*Q9. Lieu d'achat habituel:* ${data.lieu_achat || 'Non répondu'}%0A`;
+  message += `*Q9. Lieu d'achat habituel:* ${data.lieu_achat || 'Non répondu'}\n`;
   
   // Question 10
-  message += `*Q10. Priorité:* ${data.important || 'Non répondu'}%0A`;
+  message += `*Q10. Priorité:* ${data.important || 'Non répondu'}\n`;
   
   // Question 11
-  message += `*Q11. Difficultés à trouver:* ${formatAnswer(data.difficulte)}%0A`;
+  message += `*Q11. Difficultés à trouver:* ${formatAnswer(data.difficulte)}\n`;
   if (data.difficulte === 'oui') {
-    message += `   ├─ *Détails:* ${data.difficulte_detail || 'Aucun détail'}%0A`;
+    message += `   ├─ *Détails:* ${data.difficulte_detail || 'Aucun détail'}\n`;
   }
   
   // Question 12
-  message += `*Q12. Tester nouvelle marque:* ${formatAnswer(data.tester)}%0A`;
+  message += `*Q12. Tester nouvelle marque:* ${formatAnswer(data.tester)}\n`;
   
-  message += `%0A━━━━━━━━━━━━━━━━━━━━━━━%0A`;
+  message += `\n━━━━━━━━━━━━━━━━━━━━━━━\n`;
   message += `✅ *Sondage complété avec succès*`;
   
+  // Encoder le TOUT le message en une seule fois
   return encodeURIComponent(message);
 }
 
